@@ -21,7 +21,7 @@ if is_coffin:
     def paginate(request, queryset_or_list, per_page=25):
         context_instance = RequestContext(request)
         context = paginate_func(request, queryset_or_list, per_page)
-        paging = Markup(render_to_string('paging/pager.html', context, context_instance))
+        paging = Markup(render_to_string('paging/pager_jinja.html', context, context_instance))
         return dict(objects=context['paginator'].get('objects', []), paging=paging)
     register.object(paginate)
 
