@@ -12,18 +12,31 @@ try:
 except ImportError:
     is_coffin = False
 
+try:
+    if not is_coffin:
+        from django_jinja import library
+        from jinja2 import Markup
+        from django.template.loader import render_to_string
+        is_django_jinja = True
+except ImportError:
+    is_django_jinja = False
+
 from templatetag_sugar.register import tag
 from templatetag_sugar.parser import Name, Variable, Constant, Optional, Model
 
 register = template.Library()
 
-if is_coffin:
+if is_coffin or is_django_jinja:
     def paginate(request, queryset_or_list, per_page=25):
         context_instance = RequestContext(request)
         context = paginate_func(request, queryset_or_list, per_page)
-        paging = Markup(render_to_string('paging/pager_jinja.html', context, context_instance))
+        paging = Markup(render_to_string('paging/pager.jinja', context, context_instance))
         return dict(objects=context['paginator'].get('objects', []), paging=paging)
-    register.object(paginate)
+
+    if is_coffin:
+        register.object(paginate)
+    else:
+        library.Library().global_function(paginate)
 
 @tag(register, [Variable('queryset_or_list'),
                 Constant('from'), Variable('request'),
