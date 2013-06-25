@@ -27,9 +27,9 @@ from templatetag_sugar.parser import Name, Variable, Constant, Optional, Model
 register = template.Library()
 
 if is_coffin or is_django_jinja:
-    def paginate(request, queryset_or_list, per_page=25):
+    def paginate(request, queryset_or_list, per_page=25, is_endless=True):
         context_instance = RequestContext(request)
-        context = paginate_func(request, queryset_or_list, per_page)
+        context = paginate_func(request, queryset_or_list, per_page, endless=is_endless)
         paging = Markup(render_to_string('paging/pager.jinja', context, context_instance))
         return dict(objects=context['paginator'].get('objects', []), paging=paging)
 
