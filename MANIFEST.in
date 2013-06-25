@@ -1,4 +1,5 @@
 include setup.py README.rst MANIFEST.in
 recursive-include paging/templates *.html
+recursive-include paging/templates *.jinja
 recursive-exclude paging *.pyc
 global-exclude *~
